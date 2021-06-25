@@ -1,0 +1,47 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: '[]'
+    capabilities: Basic Install
+  name: sxapi-operator.v0.0.0
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions: {}
+  description: Operator used to deploy small stateless micro-services, http exposed
+    or daemonized, executing atomic action using nodejs async capacities.
+  displayName: SXApi micro-framework operator
+  icon:
+  - base64data: ""
+    mediatype: ""
+  install:
+    spec:
+      deployments: null
+    strategy: ""
+  installModes:
+  - supported: false
+    type: OwnNamespace
+  - supported: false
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  keywords:
+  - startx
+  - sxapi
+  - micro-service
+  - faas
+  - nodejs
+  links:
+  - name: Sxapi Operator
+    url: https://sxapi-operator.domain
+  maintainers:
+  - email: dev@startx.fr
+    name: startx
+  maturity: alpha
+  provider:
+    name: STARTX
+    url: https://sxapi-core.readthedocs.io
+  version: 0.0.0

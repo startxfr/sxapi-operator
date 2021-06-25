@@ -1,0 +1,22 @@
+apiVersion: v2
+appVersion: 4.7.13
+description: Helm chart used to deploy a small an simple micro-service based on the
+  sxapi application running under nodejs engine.
+home: https://startxfr.github.io/helm-repository
+icon: https://startxfr.github.io/helm-repository/img/sxapi.svg
+keywords:
+- startx
+- basic-chart
+- sxapi
+kubeVersion: '>=1.20.0'
+maintainers:
+- email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: sxapi
+sources:
+- https://startxfr.github.io/helm-repository/charts/sxapi
+- https://github.com/startxfr/helm-repository/tree/master/charts/sxapi
+tags: infra,basic,sxapi
+type: application
+version: 0.3.423

@@ -1,0 +1,6 @@
+# Use the 'create api' subcommand to add watches to this file.
+- group: sxapi.startx.fr
+  version: v1alpha1
+  kind: SXApi
+  chart: helm-charts/sxapi
+#+kubebuilder:scaffold:watch

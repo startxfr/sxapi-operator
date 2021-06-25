@@ -1,0 +1,76 @@
+
+
+# # Use it to Overrride the helm-chart name
+#nameOverride: sxapi
+# # Use it to Overrride the helm-chart version
+#versionOverride: "0.0.1"
+
+# Application deployment context
+context: 
+# Name of the global scope for this application (organisational tenant)
+ scope: myscope
+# Name of the cluster running this application (plateform tenant)
+ cluster: localhost
+# Name of the environement for this application (ex: dev, factory, preprod or prod)
+ environment: myenv
+# Component name of this application (logical tenant)
+ component: sxapi
+# Application name (functionnal tenant, default use Chart name)
+ app: default-sxapi
+# Version name of this application (default use Chart appVersion)
+ version: "0.0.1"
+
+# Configuration of the sxapi application
+sxapi:
+  # configuration of the service
+  service:
+    # Enable service for this application
+    enabled: true
+  # configuration of the expose service
+  expose:
+    # Enable exposition for this application
+    enabled: false
+    # Kind of backend used for exposing application
+    kind: "route"
+  # Sxapi image version to run
+  version: "0.3.57"
+  # Profile to run inside the container
+  profile: "prod:start"
+  # Enable debuging of the container
+  debug: false
+  # Define the number of replicas for this sxapi instance
+  replicas: 1
+  # Files to load into the application
+  data: |
+    sxapi.yml: |-
+      name: {{ include "startx.appName" . }}
+      description: Description of {{ include "startx.appName" . }}
+      version: {{ include "startx.appVersion" . }}
+      debug: "{{- .Values.sxapi.debug }}"
+      resources:
+        serviceinfo-sample:
+          _class: serviceinfo
+      log:
+        filters:
+          level: '0,1,2,3,4'
+          type: debug,info,error,warn
+      server:
+        port: '8077'
+        endpoints:
+        - path: "/"
+          desc: Display welcome message (HTML)
+          body: |-
+              <html>
+              <head><title>Example application {{ include "startx.appName" . }}</title></head>
+              <body><h1>API {{ include "startx.appName" . }} is live !</h1></body>
+              </html>
+        - path: "/health"
+          resource: serviceinfo-sample
+          endpoint: health
+        - path: "/info"
+          resource: serviceinfo-sample
+          endpoint: info
+        - path: "/ping"
+          desc: Ping the application. Return a sample message in json
+          code: '200'
+          body: pong

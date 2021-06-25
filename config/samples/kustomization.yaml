@@ -1,0 +1,4 @@
+## Append samples you want in your CSV to this file as resources ##
+resources:
+- sxapi_v1alpha1_sxapi.yaml
+#+kubebuilder:scaffold:manifestskustomizesamples

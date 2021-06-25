@@ -1,0 +1,24 @@
+# permissions for end users to edit sxapis.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: sxapi-editor-role
+rules:
+- apiGroups:
+  - sxapi.startx.fr
+  resources:
+  - sxapis
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - sxapi.startx.fr
+  resources:
+  - sxapis/status
+  verbs:
+  - get

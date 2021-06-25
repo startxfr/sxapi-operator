@@ -1,0 +1,257 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: |-
+      [
+        {
+          "apiVersion": "sxapi.startx.fr/v1alpha1",
+          "kind": "SXApi",
+          "metadata": {
+            "name": "sxapi-sample"
+          },
+          "spec": {
+            "context": {
+              "app": "default-sxapi",
+              "cluster": "localhost",
+              "component": "sxapi",
+              "environment": "myenv",
+              "scope": "myscope",
+              "version": "0.0.1"
+            },
+            "sxapi": {
+              "data": "sxapi.yml: |-\n  name: {{ include \"startx.appName\" . }}\n  description: Description of {{ include \"startx.appName\" . }}\n  version: {{ include \"startx.appVersion\" . }}\n  debug: \"{{- .Values.sxapi.debug }}\"\n  resources:\n    serviceinfo-sample:\n      _class: serviceinfo\n  log:\n    filters:\n      level: '0,1,2,3,4'\n      type: debug,info,error,warn\n  server:\n    port: '8077'\n    endpoints:\n    - path: \"/\"\n      desc: Display welcome message (HTML)\n      body: |-\n          \u003chtml\u003e\n          \u003chead\u003e\u003ctitle\u003eExample application {{ include \"startx.appName\" . }}\u003c/title\u003e\u003c/head\u003e\n          \u003cbody\u003e\u003ch1\u003eAPI {{ include \"startx.appName\" . }} is live !\u003c/h1\u003e\u003c/body\u003e\n          \u003c/html\u003e\n    - path: \"/health\"\n      resource: serviceinfo-sample\n      endpoint: health\n    - path: \"/info\"\n      resource: serviceinfo-sample\n      endpoint: info\n    - path: \"/ping\"\n      desc: Ping the application. Return a sample message in json\n      code: '200'\n      body: pong\n",
+              "debug": true,
+              "expose": {
+                "enabled": true,
+                "kind": "route"
+              },
+              "profile": "prod:start",
+              "replicas": 2,
+              "service": {
+                "enabled": true
+              },
+              "version": "0.3.57"
+            }
+          }
+        }
+      ]
+    capabilities: Basic Install
+    operators.operatorframework.io/builder: operator-sdk-v1.8.0+git
+    operators.operatorframework.io/project_layout: helm.sdk.operatorframework.io/v1
+  name: sxapi-operator.v0.0.1
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - kind: SXApi
+      name: sxapis.sxapi.startx.fr
+      version: v1alpha1
+  description: Operator used to deploy small stateless micro-services, http exposed
+    or daemonized, executing atomic action using nodejs async capacities.
+  displayName: SXApi micro-framework operator
+  icon:
+  - base64data: ""
+    mediatype: ""
+  install:
+    spec:
+      clusterPermissions:
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - namespaces
+          verbs:
+          - get
+        - apiGroups:
+          - ""
+          resources:
+          - secrets
+          verbs:
+          - '*'
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - create
+        - apiGroups:
+          - sxapi.startx.fr
+          resources:
+          - sxapis
+          - sxapis/status
+          - sxapis/finalizers
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - services
+          - services/finalizers
+          - endpoints
+          - persistentvolumeclaims
+          - events
+          - configmaps
+          - secrets
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - apps
+          resources:
+          - deployments
+          - daemonsets
+          - replicasets
+          - statefulsets
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - authentication.k8s.io
+          resources:
+          - tokenreviews
+          verbs:
+          - create
+        - apiGroups:
+          - authorization.k8s.io
+          resources:
+          - subjectaccessreviews
+          verbs:
+          - create
+        serviceAccountName: sxapi-operator-controller-manager
+      deployments:
+      - name: sxapi-operator-controller-manager
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              control-plane: controller-manager
+          strategy: {}
+          template:
+            metadata:
+              labels:
+                control-plane: controller-manager
+            spec:
+              containers:
+              - args:
+                - --health-probe-bind-address=:8081
+                - --metrics-bind-address=127.0.0.1:8080
+                - --leader-elect
+                - --leader-election-id=sxapi-operator
+                image: quay.io/startx/sxapi-operator:0.0.1
+                livenessProbe:
+                  httpGet:
+                    path: /healthz
+                    port: 8081
+                  initialDelaySeconds: 15
+                  periodSeconds: 20
+                name: manager
+                readinessProbe:
+                  httpGet:
+                    path: /readyz
+                    port: 8081
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                resources:
+                  limits:
+                    cpu: 100m
+                    memory: 90Mi
+                  requests:
+                    cpu: 100m
+                    memory: 60Mi
+                securityContext:
+                  allowPrivilegeEscalation: false
+              - args:
+                - --secure-listen-address=0.0.0.0:8443
+                - --upstream=http://127.0.0.1:8080/
+                - --logtostderr=true
+                - --v=10
+                image: gcr.io/kubebuilder/kube-rbac-proxy:v0.8.0
+                name: kube-rbac-proxy
+                ports:
+                - containerPort: 8443
+                  name: https
+                resources: {}
+              securityContext:
+                runAsNonRoot: true
+              serviceAccountName: sxapi-operator-controller-manager
+              terminationGracePeriodSeconds: 10
+      permissions:
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
+        - apiGroups:
+          - coordination.k8s.io
+          resources:
+          - leases
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - create
+          - patch
+        serviceAccountName: sxapi-operator-controller-manager
+    strategy: deployment
+  installModes:
+  - supported: false
+    type: OwnNamespace
+  - supported: false
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  keywords:
+  - startx
+  - sxapi
+  - micro-service
+  - faas
+  - nodejs
+  links:
+  - name: Sxapi Operator
+    url: https://sxapi-operator.domain
+  maintainers:
+  - email: dev@startx.fr
+    name: startx
+  maturity: alpha
+  provider:
+    name: STARTX
+    url: https://sxapi-core.readthedocs.io
+  version: 0.0.1
