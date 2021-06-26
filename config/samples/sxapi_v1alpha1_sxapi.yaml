@@ -13,10 +13,10 @@ spec:
   sxapi:
     data: |
       sxapi.yml: |-
-        name: {{ include "startx.appName" . }}
-        description: Description of {{ include "startx.appName" . }}
-        version: {{ include "startx.appVersion" . }}
-        debug: "{{- .Values.sxapi.debug }}"
+        name: default
+        description: Description of the default sxapi instance (defined in sxapi operator)
+        version: "0.3.57"
+        debug: false
         resources:
           serviceinfo-sample:
             _class: serviceinfo
@@ -28,11 +28,23 @@ spec:
           port: '8077'
           endpoints:
           - path: "/"
-            desc: Display welcome message (HTML)
             body: |-
                 <html>
-                <head><title>Example application {{ include "startx.appName" . }}</title></head>
-                <body><h1>API {{ include "startx.appName" . }} is live !</h1></body>
+                <head><title>Example application (operator default values)</title></head>
+                <body>
+                  <h1>SXAPI is live ! (operator's managed)</h1>
+                  <p>
+                    This example is deployed using the sxapi operator example based on the 
+                    <a href="https://helm-repository.readthedocs.io/en/latest/charts/sxapi.html" target="_blank">sxapi chart</a>
+                    available in the <a href="https://helm-repository.readthedocs.io" target="_blank">startx helm repository</a>. 
+                  </p>
+                  <p>
+                    You could check the following endpoints :</p>
+                  <ul>
+                    <li><a href="./health">Health status (used by readiness probe)</a></li>
+                    <li><a href="./info">Information about the application</a></li>
+                  </ul>
+                </body>
                 </html>
           - path: "/health"
             resource: serviceinfo-sample
@@ -40,18 +52,10 @@ spec:
           - path: "/info"
             resource: serviceinfo-sample
             endpoint: info
-          - path: "/ping"
-            desc: Ping the application. Return a sample message in json
-            code: '200'
-            body: pong
     debug: true
     expose:
       enabled: true
-      kind: route
     profile: prod:start
     replicas: 2
-    service:
-      enabled: true
-    version: 0.3.57
   
   
