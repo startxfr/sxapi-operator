@@ -20,11 +20,13 @@ Usage:
   - publish bundle           Build and publish the sxapi operator bundle
   - publish catalog          Build and publish the sxapi operator catalog
   - publish all              Build and publish all the sxapi operator components (operator, bundle and OLM catalog)
+  - deploy                   Deploy the OLM catalog and a subscription (with operatorGroup) to test the operator availability
 
 - Examples  :
   ./sx-operator commit      Commit a change to the current branch
   ./sx-operator build all   Build all the sxapi operator components (operator, bundle and OLM catalog)
   ./sx-operator publish all Build and publish all the sxapi operator components (operator, bundle and OLM catalog)
+  ./sx-operator deploy      Deploy the OLM catalog and a subscription (with operatorGroup) to test the operator availability
 
 EOF
 }
@@ -36,6 +38,9 @@ if [[ "$1" != "" ]]; then
         commit)
             git add $PROJECT_PATH
             git commit
+        ;;
+        deploy)
+            oc apply -f load-catalog.yaml
         ;;
         build)
             case $2 in
