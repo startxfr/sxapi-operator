@@ -10,10 +10,11 @@ spec:
   apiservicedefinitions: {}
   customresourcedefinitions:
     owned:
-    - displayName: SXApi
+    - description: An SXApi is a micro-service deployment with features defined into
+        a configMap.
+      displayName: SXApi
       kind: SXApi
       name: sxapi.startx.fr
-      description: An SXApi is a micro-service deployment with features defined into a configMap.
       resources:
       - kind: ConfigMap
         name: ""
