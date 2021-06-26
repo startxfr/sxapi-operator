@@ -17,7 +17,7 @@ metadata:
               "component": "sxapi",
               "environment": "myenv",
               "scope": "myscope",
-              "version": "0.0.1"
+              "version": "0.0.2"
             },
             "sxapi": {
               "data": "sxapi.yml: |-\n  name: {{ include \"startx.appName\" . }}\n  description: Description of {{ include \"startx.appName\" . }}\n  version: {{ include \"startx.appVersion\" . }}\n  debug: \"{{- .Values.sxapi.debug }}\"\n  resources:\n    serviceinfo-sample:\n      _class: serviceinfo\n  log:\n    filters:\n      level: '0,1,2,3,4'\n      type: debug,info,error,warn\n  server:\n    port: '8077'\n    endpoints:\n    - path: \"/\"\n      desc: Display welcome message (HTML)\n      body: |-\n          \u003chtml\u003e\n          \u003chead\u003e\u003ctitle\u003eExample application {{ include \"startx.appName\" . }}\u003c/title\u003e\u003c/head\u003e\n          \u003cbody\u003e\u003ch1\u003eAPI {{ include \"startx.appName\" . }} is live !\u003c/h1\u003e\u003c/body\u003e\n          \u003c/html\u003e\n    - path: \"/health\"\n      resource: serviceinfo-sample\n      endpoint: health\n    - path: \"/info\"\n      resource: serviceinfo-sample\n      endpoint: info\n    - path: \"/ping\"\n      desc: Ping the application. Return a sample message in json\n      code: '200'\n      body: pong\n",
