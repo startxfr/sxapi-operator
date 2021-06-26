@@ -20,18 +20,13 @@ metadata:
               "version": "0.0.2"
             },
             "sxapi": {
-              "data": "sxapi.yml: |-\n  name: {{ include \"startx.appName\" . }}\n  description: Description of {{ include \"startx.appName\" . }}\n  version: {{ include \"startx.appVersion\" . }}\n  debug: \"{{- .Values.sxapi.debug }}\"\n  resources:\n    serviceinfo-sample:\n      _class: serviceinfo\n  log:\n    filters:\n      level: '0,1,2,3,4'\n      type: debug,info,error,warn\n  server:\n    port: '8077'\n    endpoints:\n    - path: \"/\"\n      desc: Display welcome message (HTML)\n      body: |-\n          \u003chtml\u003e\n          \u003chead\u003e\u003ctitle\u003eExample application {{ include \"startx.appName\" . }}\u003c/title\u003e\u003c/head\u003e\n          \u003cbody\u003e\u003ch1\u003eAPI {{ include \"startx.appName\" . }} is live !\u003c/h1\u003e\u003c/body\u003e\n          \u003c/html\u003e\n    - path: \"/health\"\n      resource: serviceinfo-sample\n      endpoint: health\n    - path: \"/info\"\n      resource: serviceinfo-sample\n      endpoint: info\n    - path: \"/ping\"\n      desc: Ping the application. Return a sample message in json\n      code: '200'\n      body: pong\n",
+              "data": "sxapi.yml: |-\n  name: default\n  description: Description of the default sxapi instance (defined in sxapi operator)\n  version: \"0.3.57\"\n  debug: false\n  resources:\n    serviceinfo-sample:\n      _class: serviceinfo\n  log:\n    filters:\n      level: '0,1,2,3,4'\n      type: debug,info,error,warn\n  server:\n    port: '8077'\n    endpoints:\n    - path: \"/\"\n      body: |-\n          \u003chtml\u003e\n          \u003chead\u003e\u003ctitle\u003eExample application (operator default values)\u003c/title\u003e\u003c/head\u003e\n          \u003cbody\u003e\n            \u003ch1\u003eSXAPI is live ! (operator's managed)\u003c/h1\u003e\n            \u003cp\u003e\n              This example is deployed using the sxapi operator example based on the \n              \u003ca href=\"https://helm-repository.readthedocs.io/en/latest/charts/sxapi.html\" target=\"_blank\"\u003esxapi chart\u003c/a\u003e\n              available in the \u003ca href=\"https://helm-repository.readthedocs.io\" target=\"_blank\"\u003estartx helm repository\u003c/a\u003e. \n            \u003c/p\u003e\n            \u003cp\u003e\n              You could check the following endpoints :\u003c/p\u003e\n            \u003cul\u003e\n              \u003cli\u003e\u003ca href=\"./health\"\u003eHealth status (used by readiness probe)\u003c/a\u003e\u003c/li\u003e\n              \u003cli\u003e\u003ca href=\"./info\"\u003eInformation about the application\u003c/a\u003e\u003c/li\u003e\n            \u003c/ul\u003e\n          \u003c/body\u003e\n          \u003c/html\u003e\n    - path: \"/health\"\n      resource: serviceinfo-sample\n      endpoint: health\n    - path: \"/info\"\n      resource: serviceinfo-sample\n      endpoint: info\n",
               "debug": true,
               "expose": {
-                "enabled": true,
-                "kind": "route"
-              },
-              "profile": "prod:start",
-              "replicas": 2,
-              "service": {
                 "enabled": true
               },
-              "version": "0.3.57"
+              "profile": "prod:start",
+              "replicas": 2
             }
           }
         }
@@ -39,7 +34,7 @@ metadata:
     capabilities: Basic Install
     operators.operatorframework.io/builder: operator-sdk-v1.8.0+git
     operators.operatorframework.io/project_layout: helm.sdk.operatorframework.io/v1
-  name: sxapi-operator.v0.0.1
+  name: sxapi-operator.v0.0.2
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -48,12 +43,41 @@ spec:
     - kind: SXApi
       name: sxapis.sxapi.startx.fr
       version: v1alpha1
-  description: Operator used to deploy small stateless micro-services, http exposed
-    or daemonized, executing atomic action using nodejs async capacities.
+  description: "## Overview\n\nThe SXApi Operator manages the full lifecycle of [sxapi](https://sxapi-core.readthedocs.io)
+    applications. \nThe operator's goal is to automate the tasks required when deploying
+    an sxapi application.\n\nBeyond installation, the operator helps to automate the
+    process of upgrading, backing up and restoring as needed and\nremove the human
+    as much as possible. \n\nThe operator aims to provide the following, and is a
+    work in progress.\n\n* Easy configuration and installation of the SXApi resources
+    with sane defaults to get up and running quickly.\n* Autoscale the SXApi computes
+    resources as necessary to handle workload (tech preview).\n\n## Usage\n\nDeploy
+    a basic SXApi application by creating a new SXApi resource in your current namespace.\n\n```\napiVersion:
+    sxapi.startx.fr/v1alpha1\nkind: SXApi\nmetadata:\n  name: example-sxapi\nspec:\n
+    \ context:\n    app: example-sxapi\n    component: sxapi\n    environment: demo\n
+    \   scope: example\n    version: 0.0.2\n  sxapi:\n    data: |\n      sxapi.yml:
+    |-\n        name: example\n        description: Description of the example sxapi
+    instance (defined in sxapi operator)\n        version: \"0.3.57\"\n        debug:
+    false\n        resources:\n          serviceinfo-sample:\n            _class:
+    serviceinfo\n        log:\n          filters:\n            level: '0,1,2,3,4'\n
+    \           type: debug,info,error,warn\n        server:\n          port: '8077'\n
+    \         endpoints:\n          - path: \"/\"\n            body: |-\n                <html>\n
+    \               <head><title>Example application (operator default values)</title></head>\n
+    \               <body>\n                  <h1>SXAPI is live ! (operator's managed)</h1>\n
+    \                 <p>\n                    This example is deployed using the
+    sxapi operator example based on the \n                    <a href=\"https://helm-repository.readthedocs.io/en/latest/charts/sxapi.html\"
+    target=\"_blank\">sxapi chart</a>\n                    available in the <a href=\"https://helm-repository.readthedocs.io\"
+    target=\"_blank\">startx helm repository</a>. \n                  </p>\n                  <p>\n
+    \                   You could check the following endpoints :</p>\n                  <ul>\n
+    \                   <li><a href=\"./health\">Health status (used by readiness
+    probe)</a></li>\n                    <li><a href=\"./info\">Information about
+    the application</a></li>\n                  </ul>\n                </body>\n                </html>\n
+    \         - path: \"/health\"\n            resource: serviceinfo-sample\n            endpoint:
+    health\n    expose:\n      enabled: true\n    replicas: 3\n\n```\n\nSee the [documentation](https://sxapi-core.readthedocs.io)
+    and examples on\n[github](https://github.com/startxfr/sxapi-core) for more information.\n"
   displayName: SXApi micro-framework operator
   icon:
-  - base64data: ""
-    mediatype: ""
+  - base64data: PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjUiIGhlaWdodD0iNjUiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDY1IDY1IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogPHRpdGxlPlNYQVBJIGxvZ288L3RpdGxlPgogPGcgdHJhbnNmb3JtPSJtYXRyaXgoMi45MjEgMCAwIDIuOTIxIC0zMy44ODQgLTc1My45NykiPgogIDxnIGlkPSJhIiB0cmFuc2Zvcm09Im1hdHJpeCguMjgxNCAwIDAgLjI4MTQgOC41ODE4IDIyOC41NykiIGZpbGw9Im5vbmUiPgogICA8cGF0aCBpZD0iYiIgZD0ibTI4LjU5MSAxNzMuODcgMjUuMzY3LTI1LjM3NS0wLjAxOTAxLTE1LjQwMiIgc3Ryb2tlPSIjZmYwZTJmIiBzdHJva2Utd2lkdGg9IjQuOTQ1OCIvPgogICA8ZyBpZD0iYyIgdHJhbnNmb3JtPSJtYXRyaXgoLjM1MzI3IDAgMCAuMzUzMjcgMTAuMzk3IDY5LjUyOSkiIHN0cm9rZT0iIzRkOWVmZiIgc3Ryb2tlLXdpZHRoPSIxNCI+CiAgICA8cGF0aCBkPSJtMTYuODczIDI2Mi4xMiA1My4xODEtNTIuNzY0LTAuMDAyOC00NS40NjQtMTIuMDU1LTExLjc0MSIvPgogICAgPGNpcmNsZSBjeD0iNTAuODUzIiBjeT0iMTQ0LjIzIiByPSIxMi4xMDkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogICA8L2c+CiAgIDxnIGlkPSJkIiBzdHJva2U9IiM4YzAyMTUiPgogICAgPHBhdGggZD0ibTM0LjMzOCAxODAuMTEgMjAuOTc0LTIwLjE2MmgxMy4xOTkiIHN0cm9rZS13aWR0aD0iNC45NDU4Ii8+CiAgICA8cmVjdCB4PSI2OC45OTEiIHk9IjE1NC44NiIgd2lkdGg9IjEwLjQ2NyIgaGVpZ2h0PSIxMC40NjciIHJ4PSIwIiByeT0iMCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2Utd2lkdGg9IjQuMjM5MiIvPgogICA8L2c+CiAgIDxnIGlkPSJlIiB0cmFuc2Zvcm09Im1hdHJpeCguMzUzMjcgMCAwIC4zNTMyNyAxMC4zOTcgNjkuNTI5KSIgc3Ryb2tlPSIjMmYxZGZmIj4KICAgIDxwYXRoIGQ9Im0xMjEuMTQgMTM0LjMxLTI4Ljg1NCAyOS4yNTUtMC4wMDkxMDYgNTYuMzc4LTU4LjQzNyA1OS4xNDQiIHN0cm9rZS13aWR0aD0iMTQiLz4KICAgIDxwYXRoIGQ9Im0xMzAuMTcgMTUwLjEzLTI1LjkzOC0yNS45MzggMzUuNDMyLTkuNDkzOXoiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxMiIvPgogICA8L2c+CiAgPC9nPgogPC9nPgo8L3N2Zz4K
+    mediatype: image/svg+xml
   install:
     spec:
       clusterPermissions:
@@ -156,7 +180,7 @@ spec:
                 - --metrics-bind-address=127.0.0.1:8080
                 - --leader-elect
                 - --leader-election-id=sxapi-operator
-                image: quay.io/startx/sxapi-operator:0.0.1
+                image: quay.io/startx/sxapi-operator:0.0.2
                 livenessProbe:
                   httpGet:
                     path: /healthz
@@ -244,9 +268,17 @@ spec:
   - micro-service
   - faas
   - nodejs
+  - api
+  - kubernetes
   links:
-  - name: Sxapi Operator
-    url: https://sxapi-operator.domain
+  - name: SXApi Documentation
+    url: https://sxapi-core.readthedocs.io
+  - name: SXApi Operator Documentation
+    url: https://sxapi-core.readthedocs.io#operator
+  - name: SXApi Source Code
+    url: https://github.com/startxfr/sxapi-core
+  - name: SXApi Operator Source Code
+    url: https://github.com/startxfr/sxapi-operator
   maintainers:
   - email: dev@startx.fr
     name: startx
@@ -254,4 +286,5 @@ spec:
   provider:
     name: STARTX
     url: https://sxapi-core.readthedocs.io
-  version: 0.0.1
+  replaces: sxapi-operator.v0.0.1
+  version: 0.0.2
