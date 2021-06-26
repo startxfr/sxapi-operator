@@ -1,17 +1,9 @@
 #!/bin/bash
 PROJECT_PATH=`dirname $(readlink -f $0)`
 
-if [[ "$1" != "" ]]; then
-    case $1 in
-        commit)
-            git add $PROJECT_PATH
-            git commit
-        ;;
-        publish)                routerPublish;;
-        release)                routerRelease;;
-        version)                routerVersion;;
-        *)
-            cat <<EOF
+# menu for usage command
+function menuUsage {
+cat <<EOF
 
 This client helps you manage the lifecycle of the sxapi operator.
 
@@ -20,24 +12,80 @@ Usage:
 
 - Actions  :
   - commit                   commit a change to the current branch
-  - info                     Get information about a given helm-chart
-  - test                     Test an helm chart
-  - package                  Package an helm chart
-  - release                  Release an helm chart
-  - publish                  Release and publish an helm chart into repository
-  - delete                   Delete an helm chart
+  - build operator           Build the sxapi operator
+  - build bundle             Build the sxapi operator bundle
+  - build catalog            Build the sxapi operator catalog
+  - build all                Build all the sxapi operator components (operator, bundle and OLM catalog)
+  - publish operator         Build and publish the sxapi operator
+  - publish bundle           Build and publish the sxapi operator bundle
+  - publish catalog          Build and publish the sxapi operator catalog
+  - publish all              Build and publish all the sxapi operator components (operator, bundle and OLM catalog)
 
 - Examples  :
-  ./sx-operator create      Create an new helm chart named  
-  ./sx-operator info        Read info about helm chart named  
-  ./sx-operator test        Test   chart
-  ./sx-operator package     Package   chart
-  ./sx-operator release     Release   chart
-  ./sx-operator publish     Publish an helm chart into repository
-  ./sx-operator delete      Delete   chart
+  ./sx-operator commit      Commit a change to the current branch
+  ./sx-operator build all   Build all the sxapi operator components (operator, bundle and OLM catalog)
+  ./sx-operator publish all Build and publish all the sxapi operator components (operator, bundle and OLM catalog)
 
 EOF
+}
+
+
+
+if [[ "$1" != "" ]]; then
+    case $1 in
+        commit)
+            git add $PROJECT_PATH
+            git commit
         ;;
+        build)
+            case $2 in
+                operator)
+                    make docker-build
+                    git add $PROJECT_PATH
+                    git commit $PROJECT_PATH
+                ;;
+                bundle)
+                    make bundle bundle-build
+                    git add $PROJECT_PATH
+                    git commit $PROJECT_PATH
+                ;;
+                catalog)
+                    make catalog-build
+                    git add $PROJECT_PATH
+                    git commit $PROJECT_PATH
+                ;;
+                *)
+                    make docker-build bundle bundle-build catalog-build
+                    git add $PROJECT_PATH
+                    git commit $PROJECT_PATH
+                ;;
+            esac
+        ;;
+        publish)
+            case $2 in
+                operator)
+                    make docker-build docker-push
+                    git add $PROJECT_PATH
+                    git commit $PROJECT_PATH
+                ;;
+                bundle)
+                    make bundle bundle-build bundle-push
+                    git add $PROJECT_PATH
+                    git commit $PROJECT_PATH
+                ;;
+                catalog)
+                    make catalog-build catalog-push
+                    git add $PROJECT_PATH
+                    git commit $PROJECT_PATH
+                ;;
+                *)
+                    make docker-build docker-push bundle bundle-build bundle-push catalog-build catalog-push
+                    git add $PROJECT_PATH
+                    git commit $PROJECT_PATH
+                ;;
+            esac
+        ;;
+        *)  menuUsage;;
     esac
 else
     menuUsage
