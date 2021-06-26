@@ -1,0 +1,44 @@
+#!/bin/bash
+PROJECT_PATH=`dirname $(readlink -f $0)`
+
+if [[ "$1" != "" ]]; then
+    case $1 in
+        commit)
+            git add $PROJECT_PATH
+            git commit
+        ;;
+        publish)                routerPublish;;
+        release)                routerRelease;;
+        version)                routerVersion;;
+        *)
+            cat <<EOF
+
+This client helps you manage the lifecycle of the sxapi operator.
+
+Usage:
+  ./sx-operator <action> [flags]
+
+- Actions  :
+  - commit                   commit a change to the current branch
+  - info                     Get information about a given helm-chart
+  - test                     Test an helm chart
+  - package                  Package an helm chart
+  - release                  Release an helm chart
+  - publish                  Release and publish an helm chart into repository
+  - delete                   Delete an helm chart
+
+- Examples  :
+  ./sx-operator create      Create an new helm chart named  
+  ./sx-operator info        Read info about helm chart named  
+  ./sx-operator test        Test   chart
+  ./sx-operator package     Package   chart
+  ./sx-operator release     Release   chart
+  ./sx-operator publish     Publish an helm chart into repository
+  ./sx-operator delete      Delete   chart
+
+EOF
+        ;;
+    esac
+else
+    menuUsage
+fi
