@@ -4,7 +4,7 @@ metadata:
   annotations:
     alm-examples: '[]'
     capabilities: Basic Install
-  name: sxapi-operator.v0.0.4
+  name: sxapi-operator.v0.0.5
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -140,7 +140,7 @@ spec:
         component: sxapi
         environment: demo
       scope: example
-        version: 0.0.4
+        version: 0.0.5
       sxapi:
         data: |
           sxapi.yml: |-
@@ -229,4 +229,4 @@ spec:
     name: STARTX
     url: https://sxapi-core.readthedocs.io
   replaces: sxapi-operator.v0.0.2
-  version: 0.0.4
+  version: 0.0.5
