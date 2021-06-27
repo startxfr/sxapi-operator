@@ -4,7 +4,7 @@ metadata:
   annotations:
     alm-examples: '[]'
     capabilities: Basic Install
-  name: sxapi-operator.v0.0.6
+  name: sxapi-operator.v0.0.7
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -111,7 +111,7 @@ spec:
     application by creating a new SXApi resource in your current namespace.\n``` apiVersion:
     sxapi.startx.fr/v1alpha1 kind: SXApi metadata:\n  name: example-sxapi\nspec: context:\n
     \   app: example-sxapi\n    component: sxapi\n    environment: demo\n  scope:
-    example\n    version: 0.0.6\n  sxapi:\n    data: |\n      sxapi.yml: |-\n        name:
+    example\n    version: 0.0.7\n  sxapi:\n    data: |\n      sxapi.yml: |-\n        name:
     example\n        description: Description of the example sxapi instance (defined
     in sxapi operator)\n        version: \"0.3.57\"\n        debug: false\n        resources:\n
     \         serviceinfo-sample:\n            _class: serviceinfo\n        log:\n
@@ -172,5 +172,5 @@ spec:
   provider:
     name: STARTX
     url: https://sxapi-core.readthedocs.io
-  replaces: sxapi-operator.v0.0.2
-  version: 0.0.6
+  replaces: sxapi-operator.v0.0.6
+  version: 0.0.7
