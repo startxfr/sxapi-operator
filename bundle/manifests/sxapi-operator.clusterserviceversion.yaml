@@ -312,5 +312,5 @@ spec:
   provider:
     name: STARTX
     url: https://sxapi-core.readthedocs.io
-  replaces: sxapi-operator.v0.0.6
+  replaces: sxapi-operator.v0.0.7
   version: 0.0.8
