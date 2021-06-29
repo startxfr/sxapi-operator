@@ -9,7 +9,7 @@ spec:
     component: sxapi
     environment: myenv
     scope: myscope
-    version: "0.0.7"
+    version: "0.0.8"
   sxapi:
     data: |
       sxapi.yml: |-

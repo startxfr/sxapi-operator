@@ -13,6 +13,8 @@ spec:
   scope: Namespaced
   versions:
   - name: v1alpha1
+    served: true
+    storage: true
     schema:
       openAPIV3Schema:
         description: SXApi is the Schema for the sxapis API
@@ -38,7 +40,5 @@ spec:
             type: object
             x-kubernetes-preserve-unknown-fields: true
         type: object
-    served: true
-    storage: true
     subresources:
       status: {}
