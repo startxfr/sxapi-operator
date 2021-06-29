@@ -39,6 +39,9 @@ metadata:
     description: Run SXApi-based applications on Kubernetes / Openshift clusters.
     repository: https://github.com/startx/sxapi-operator
     support: STARTX
+    operatorframework.io/suggested-namespace: startx-operators
+    # operators.openshift.io/infrastructure-features: '["disconnected", "proxy-aware"]'
+    operators.openshift.io/valid-subscription: '["OpenShift Container Platform"]'
   name: sxapi-operator.v0.0.7
   namespace: placeholder
 spec:
