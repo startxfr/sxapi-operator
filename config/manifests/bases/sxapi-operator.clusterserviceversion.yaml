@@ -50,7 +50,6 @@ spec:
     - description: SXApi instance
       displayName: SXApi
       kind: SXApi
-      version: v1alpha1
       name: sxapi.startx.fr
       resources:
       - kind: ConfigMap
@@ -83,7 +82,24 @@ spec:
       - kind: StatefulSet
         name: ""
         version: v1
+      statusDescriptors:
+      - description: The status of each of the member Pods for the etcd cluster.
+        displayName: Member Status
+        path: members
+        x-descriptors:
+          - 'urn:alm:descriptor:com.tectonic.ui:podStatuses'
+      - description: Phase is a simple, high-level summary of where the ArgoCDExport is in its lifecycle.
+        displayName: Phase
+        path: phase
+        x-descriptors:
+        - 'urn:alm:descriptor:com.tectonic.ui:text'
       specDescriptors:
+      - description: The context of the deployment
+        displayName: Context
+        path: context
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:fieldGroup:Context
+        - urn:alm:descriptor:com.tectonic.ui:hidden
       - description: The name of the cluster
         displayName: Cluster name
         path: context.cluster
@@ -120,22 +136,31 @@ spec:
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:fieldGroup:Context
         - urn:alm:descriptor:com.tectonic.ui:text
-      - description: Expose the application
-        displayName: Expose application
-        path: sxapi.expose.enabled
+      - description: Configuration of the application
+        displayName: SXapi
+        path: sxapi
         x-descriptors:
-        - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
+        - urn:alm:descriptor:com.tectonic.ui:fieldGroup:SXApi
+        - urn:alm:descriptor:com.tectonic.ui:hidden
       - description: Replicas number for this deployment
         displayName: Replicas
         path: sxapi.replicas
         x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:fieldGroup:SXApi
         - urn:alm:descriptor:com.tectonic.ui:podCount
+      - description: Expose the application
+        displayName: Expose application
+        path: sxapi.expose.enabled
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:fieldGroup:SXApi
+        - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
       - description: Enable debug mode behaviours
         displayName: Debug
         path: sxapi.debug
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:advanced
         - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
+      version: v1alpha1
   description: "## Overview\n\nThe SXApi Operator manages the full lifecycle of [sxapi](https://sxapi-core.readthedocs.io)\napplications.
     \ The operator's goal is to automate the tasks required when deploying\nan sxapi
     application.\n\nBeyond installation, the operator helps to automate the\nprocess
