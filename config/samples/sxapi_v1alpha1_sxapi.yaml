@@ -16,7 +16,7 @@ spec:
         name: default
         description: Description of the default sxapi instance (defined in sxapi operator)
         version: "0.3.57"
-        debug: true
+        debug: false
         resources:
           serviceinfo-sample:
             _class: serviceinfo
@@ -52,7 +52,7 @@ spec:
           - path: "/info"
             resource: serviceinfo-sample
             endpoint: info
-    debug: true
+    debug: false
     expose:
       enabled: true
     profile: prod:start
