@@ -35,7 +35,8 @@ metadata:
     categories: Application Runtime, Developer Tools, Integration & Delivery
     certified: "false"
     containerImage: quay.io/startx/sxapi-operator:v0.0.10
-    description: Run codeless micro-applications on Kubernetes / Openshift clusters using the SXApi engine. For more information see https://sxapi-core.readthedocs.io
+    description: Run codeless micro-applications on Kubernetes / Openshift clusters
+      using the SXApi engine. For more information see https://sxapi-core.readthedocs.io
     olm.operatorGroup: global-operators
     olm.operatorNamespace: openshift-operators
     olm.targetNamespaces: openshift-operators
@@ -92,7 +93,6 @@ spec:
         path: context
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:fieldGroup:Context
-        # - urn:alm:descriptor:com.tectonic.ui:hidden
       - description: The name of the cluster
         displayName: Cluster name
         path: context.cluster
@@ -134,7 +134,6 @@ spec:
         path: sxapi
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:fieldGroup:SXApi
-        # - urn:alm:descriptor:com.tectonic.ui:hidden
       - description: Replicas number for this deployment
         displayName: Replicas
         path: sxapi.replicas
@@ -228,10 +227,6 @@ spec:
   labels:
     alm-owner-sxpi: sxapi-operator
     operated-by: sxapi-operator
-  selector:
-    matchLabels:
-      alm-owner-sxpi: sxapi-operator
-      operated-by: sxapi-operator
   links:
   - name: SXApi Documentation
     url: https://sxapi-core.readthedocs.io
@@ -250,4 +245,8 @@ spec:
     name: STARTX
     url: https://sxapi-core.readthedocs.io
   replaces: sxapi-operator.v0.0.9
+  selector:
+    matchLabels:
+      alm-owner-sxpi: sxapi-operator
+      operated-by: sxapi-operator
   version: 0.0.10
