@@ -93,7 +93,7 @@ if [[ "$1" != "" ]]; then
                 all)
                     make docker-build docker-push bundle bundle-build bundle-push
                     oc apply -f ./load-catalog.yaml
-                    operator-sdk run bundle quay.io/startx/sxapi-operator-bundle:v0.0.9
+                    operator-sdk run bundle quay.io/startx/sxapi-operator-bundle:v0.0.11
                 ;;
                 *)
                     menuUsage
