@@ -239,7 +239,7 @@ spec:
   maintainers:
   - email: dev@startx.fr
     name: startx
-  maturity: alpha
+  maturity: fast
   minKubeVersion: 1.20.0
   provider:
     name: STARTX
