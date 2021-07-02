@@ -34,7 +34,7 @@ metadata:
     capabilities: Seamless Upgrades
     categories: Application Runtime, Developer Tools, Integration & Delivery
     certified: "false"
-    containerImage: quay.io/startx/sxapi-operator:v0.0.9
+    containerImage: quay.io/startx/sxapi-operator:v0.0.10
     description: Run codeless micro-applications on Kubernetes / Openshift clusters using the SXApi engine. For more information see https://sxapi-core.readthedocs.io
     olm.operatorGroup: global-operators
     olm.operatorNamespace: openshift-operators
@@ -45,7 +45,7 @@ metadata:
     operators.operatorframework.io/project_layout: helm.sdk.operatorframework.io/v1
     repository: https://github.com/startx/sxapi-operator
     support: STARTX
-  name: sxapi-operator.v0.0.9
+  name: sxapi-operator.v0.0.10
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -176,7 +176,7 @@ spec:
     a basic SXApi application by creating a new SXApi resource in your current namespace.\n\n```yaml\napiVersion:
     sxapi.startx.fr/v1alpha1\nkind: SXApi\nmetadata:\n  name: example-sxapi\nspec:
     \n  context:\n    app: example-sxapi\n    component: sxapi\n    environment: demo\n
-    \   scope: example\n    version: 0.0.9\n  sxapi:\n    data: |\n      sxapi.yml:
+    \   scope: example\n    version: 0.0.1\n  sxapi:\n    data: |\n      sxapi.yml:
     |-\n        name: example\n        description: Description of the example sxapi
     instance (defined in sxapi operator)\n        version: \\\"0.3.57\\\"\n        debug:
     false\n        resources: \n          serviceinfo-sample:\n            _class:
@@ -249,5 +249,5 @@ spec:
   provider:
     name: STARTX
     url: https://sxapi-core.readthedocs.io
-  replaces: sxapi-operator.v0.0.8
-  version: 0.0.9
+  replaces: sxapi-operator.v0.0.9
+  version: 0.0.10
