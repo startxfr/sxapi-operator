@@ -17,6 +17,7 @@ Usage:
   - build all                Build all the sxapi operator components (operator, bundle and OLM catalog)
   - test scorecard           Build the sxapi operator and scorecard it
   - test bundle              Build the sxapi operator bundle and deploy it
+  - test in-cluster          Deploy the catalog, operatorgroup and subscription into the cluster
   - test bundle-upgrade      Build the sxapi operator bundle and upgrade the deployed one
   - test all                 Build all the sxapi operator components (operator, bundle and OLM catalog)
   - publish operator         Build and publish the sxapi operator
@@ -86,9 +87,13 @@ if [[ "$1" != "" ]]; then
                     make docker-build docker-push bundle bundle-build bundle-push
                     operator-sdk run bundle-upgrade ./bundle
                 ;;
+                in-cluster)
+                    oc apply -f ./load-catalog.yaml
+                ;;
                 all)
                     make docker-build docker-push bundle bundle-build bundle-push
-                    operator-sdk run bundle ./bundle
+                    oc apply -f ./load-catalog.yaml
+                    operator-sdk run bundle quay.io/startx/sxapi-operator-bundle:v0.0.9
                 ;;
                 *)
                     menuUsage
