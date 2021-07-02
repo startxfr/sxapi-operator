@@ -54,7 +54,7 @@ helm install startx/sxapi
 | sxapi.service.enabled | false      | Enable service for this application                   |
 | sxapi.version         | 0.3.57     | Sxapi image version to run                            |
 | sxapi.profile         | prod:start | Profile to run inside the container                   |
-| sxapi.debug           | true       | Enable debuging of the container                      |
+| sxapi.debug           | false      | Enable debuging of the container                      |
 | sxapi.replicas        | 1          | Define the number of replicas for this sxapi instance |
 | sxapi.data            | string     | Files to load into the application                    |
 

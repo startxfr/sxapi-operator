@@ -48,7 +48,7 @@ spec:
         name: default
         description: Description of the example sxapi instance (defined in sxapi operator)
         version: "0.3.57"
-        debug: false
+        debug: true
         resources:
           serviceinfo-sample:
             _class: serviceinfo
@@ -88,7 +88,7 @@ spec:
     expose:
       enabled: true
     profile: prod:start
-    replicas: 2
+    replicas: 1
 ```
 
 You can instanciate this application with the following command
