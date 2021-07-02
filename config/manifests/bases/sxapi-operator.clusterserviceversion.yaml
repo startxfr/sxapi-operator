@@ -34,7 +34,7 @@ metadata:
     capabilities: Seamless Upgrades
     categories: Application Runtime, Developer Tools, Integration & Delivery
     certified: "false"
-    containerImage: quay.io/startx/sxapi-operator:v0.0.10
+    containerImage: quay.io/startx/sxapi-operator:v0.0.11
     description: Run codeless micro-applications on Kubernetes / Openshift clusters
       using the SXApi engine. For more information see https://sxapi-core.readthedocs.io
     olm.operatorGroup: global-operators
@@ -46,7 +46,7 @@ metadata:
     operators.operatorframework.io/project_layout: helm.sdk.operatorframework.io/v1
     repository: https://github.com/startx/sxapi-operator
     support: STARTX
-  name: sxapi-operator.v0.0.10
+  name: sxapi-operator.v0.0.11
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -249,4 +249,4 @@ spec:
     matchLabels:
       alm-owner-sxpi: sxapi-operator
       operated-by: sxapi-operator
-  version: 0.0.10
+  version: 0.0.11
