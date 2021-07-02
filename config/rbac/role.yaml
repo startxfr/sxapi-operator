@@ -68,6 +68,7 @@ rules:
   - "route.openshift.io"
   resources:
   - route
+  - routes
   verbs:
   - create
   - delete

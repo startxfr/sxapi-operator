@@ -38,8 +38,8 @@ metadata:
     description: Run SXApi-based applications on Kubernetes / Openshift clusters.
     olm.operatorGroup: global-operators
     olm.operatorNamespace: openshift-operators
-    olm.targetNamespaces: startx-operators
-    operatorframework.io/suggested-namespace: startx-operators
+    olm.targetNamespaces: openshift-operators
+    operatorframework.io/suggested-namespace: openshift-operators
     operators.openshift.io/valid-subscription: '["OpenShift Container Platform"]'
     operators.operatorframework.io/builder: operator-sdk-v1.8.0+git
     operators.operatorframework.io/project_layout: helm.sdk.operatorframework.io/v1
