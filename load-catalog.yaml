@@ -10,22 +10,11 @@ spec:
   displayName: SXApi Operator
   publisher: startx.fr
 ---
-apiVersion: operators.coreos.com/v1
-kind: OperatorGroup
-metadata:
-  name: sxapi-group
-  namespace: openshift-marketplace
-spec:
-  targetNamespaces:
-  - default
-  - demo-sxapi
-  - sxapi
----
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
   name: sxapi-operator
-  namespace: default
+  namespace: openshift-operators
 spec:
   channel: alpha
   name: sxapi-operator
