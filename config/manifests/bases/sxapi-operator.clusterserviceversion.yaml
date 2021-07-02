@@ -35,7 +35,7 @@ metadata:
     categories: Application Runtime, Developer Tools, Integration & Delivery
     certified: "false"
     containerImage: quay.io/startx/sxapi-operator:v0.0.9
-    description: Run SXApi-based applications on Kubernetes / Openshift clusters.
+    description: Run codeless micro-applications on Kubernetes / Openshift clusters using the SXApi engine. For more information see https://sxapi-core.readthedocs.io
     olm.operatorGroup: global-operators
     olm.operatorNamespace: openshift-operators
     olm.targetNamespaces: openshift-operators
