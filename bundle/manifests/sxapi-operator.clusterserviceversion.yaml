@@ -32,11 +32,13 @@ metadata:
         }
       ]
     capabilities: Seamless Upgrades
-    categories: Application Runtime
+    categories: Application Runtime, Developer Tools, Integration & Delivery
     certified: "false"
     containerImage: quay.io/startx/sxapi-operator:v0.0.8
-    createdAt: "2021-06-28T15:23:00Z"
     description: Run SXApi-based applications on Kubernetes / Openshift clusters.
+    olm.operatorGroup: global-operators
+    olm.operatorNamespace: openshift-operators
+    olm.targetNamespaces: startx-operators
     operatorframework.io/suggested-namespace: startx-operators
     operators.openshift.io/valid-subscription: '["OpenShift Container Platform"]'
     operators.operatorframework.io/builder: operator-sdk-v1.8.0+git
@@ -49,31 +51,144 @@ spec:
   apiservicedefinitions: {}
   customresourcedefinitions:
     owned:
-    - kind: SXApi
+    - description: SXApi instance
+      displayName: SXApi
+      kind: SXApi
       name: sxapis.sxapi.startx.fr
+      resources:
+      - kind: ConfigMap
+        name: ""
+        version: v1
+      - kind: Secret
+        name: ""
+        version: v1
+      - kind: Deployment
+        name: ""
+        version: v1
+      - kind: ReplicaSet
+        name: ""
+        version: v1
+      - kind: Pod
+        name: ""
+        version: v1
+      - kind: Service
+        name: ""
+        version: v1
+      - kind: Route
+        name: ""
+        version: v1
+      - kind: Prometheus
+        name: ""
+        version: v1
+      - kind: ServiceMonitor
+        name: ""
+        version: v1
+      - kind: StatefulSet
+        name: ""
+        version: v1
+      specDescriptors:
+      - description: The context of the deployment
+        displayName: Context
+        path: context
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:fieldGroup:Context
+        - urn:alm:descriptor:com.tectonic.ui:hidden
+      - description: The name of the cluster
+        displayName: Cluster name
+        path: context.cluster
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:fieldGroup:Context
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - description: The name of the component
+        displayName: Component name
+        path: context.component
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:fieldGroup:Context
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - description: The name of the environment
+        displayName: Environment name
+        path: context.environment
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:fieldGroup:Context
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - description: The name of the scope
+        displayName: Scope name
+        path: context.scope
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:fieldGroup:Context
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - description: The name of the application
+        displayName: Application name
+        path: context.app
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:fieldGroup:Context
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - description: The version of the application
+        displayName: Application version
+        path: context.version
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:fieldGroup:Context
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - description: Configuration of the application
+        displayName: SXapi
+        path: sxapi
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:fieldGroup:SXApi
+        - urn:alm:descriptor:com.tectonic.ui:hidden
+      - description: Replicas number for this deployment
+        displayName: Replicas
+        path: sxapi.replicas
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:fieldGroup:SXApi
+        - urn:alm:descriptor:com.tectonic.ui:podCount
+      - description: Expose the application
+        displayName: Expose application
+        path: sxapi.expose.enabled
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:fieldGroup:SXApi
+        - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
+      - description: Enable debug mode behaviours
+        displayName: Debug
+        path: sxapi.debug
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:advanced
+        - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
+      statusDescriptors:
+      - description: The status of each of the member Pods for the etcd cluster.
+        displayName: Member Status
+        path: members
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:podStatuses
+      - description: Phase is a simple, high-level summary of where the ArgoCDExport
+          is in its lifecycle.
+        displayName: Phase
+        path: phase
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
       version: v1alpha1
-  description: "## Overview\n\nThe SXApi Operator manages the full lifecycle of [sxapi](https://sxapi-core.readthedocs.io)\napplications.
-    \ The operator's goal is to automate the tasks required when deploying\nan sxapi
-    application.\n\nBeyond installation, the operator helps to automate the\nprocess
-    of upgrading, backing up and restoring as needed and remove the human\nas much
-    as possible. \n\nThe operator aims to provide the following, and is a work in
-    progress.\n\n* Easy configuration and installation of the SXApi resources with
-    sane defaults to get up and running quickly. \n* Autoscale the SXApi computes
-    resources as necessary to handle workload (tech preview).\n\n## Usage\n\nDeploy
-    a basic SXApi application by creating a new SXApi resource in your current namespace.\n\n```yaml\napiVersion:
-    sxapi.startx.fr/v1alpha1\nkind: SXApi\nmetadata:\n  name: example-sxapi\nspec:
-    \n  context:\n    app: example-sxapi\n    component: sxapi\n    environment: demo\n
-    \   scope: example\n    version: 0.0.8\n  sxapi:\n    data: |\n      sxapi.yml:
-    |-\n        name: example\n        description: Description of the example sxapi
-    instance (defined in sxapi operator)\n        version: \\\"0.3.57\\\"\n        debug:
-    false\n        resources: \n          serviceinfo-sample:\n            _class:
-    serviceinfo\n        log:\n          filters:\n            level: '0,1,2,3,4'\n
-    \           type: debug,info,error,warn\n        server:\n          port: '8077'\n
-    \         endpoints:\n          - path: \\\"/\\\"\n            body: |-\n                <html>\n
-    \               <head><title>Example application (operator default values)</title></head>\n
-    \               <body>\n                  <h1>SXAPI is live ! (operator's managed)</h1>\n
-    \                 <p>\n                    This example is deployed using the
-    sxapi operator example\n                    based on the <a href=\\\"https://helm-repository.readthedocs.io/en/latest/charts/sxapi.html\\\"
+  description: "## sssOverview\n\nThe SXApi Operator manages the full lifecycle of
+    [sxapi](https://sxapi-core.readthedocs.io)\napplications.  The operator's goal
+    is to automate the tasks required when deploying\nan sxapi application.\n\nBeyond
+    installation, the operator helps to automate the\nprocess of upgrading, backing
+    up and restoring as needed and remove the human\nas much as possible. \n\nThe
+    operator aims to provide the following, and is a work in progress.\n\n* Easy configuration
+    and installation of the SXApi resources with sane defaults to get up and running
+    quickly. \n* Autoscale the SXApi computes resources as necessary to handle workload
+    (tech preview).\n\n## Usage\n\nDeploy a basic SXApi application by creating a
+    new SXApi resource in your current namespace.\n\n```yaml\napiVersion: sxapi.startx.fr/v1alpha1\nkind:
+    SXApi\nmetadata:\n  name: example-sxapi\nspec: \n  context:\n    app: example-sxapi\n
+    \   component: sxapi\n    environment: demo\n    scope: example\n    version:
+    0.0.8\n  sxapi:\n    data: |\n      sxapi.yml: |-\n        name: example\n        description:
+    Description of the example sxapi instance (defined in sxapi operator)\n        version:
+    \\\"0.3.57\\\"\n        debug: false\n        resources: \n          serviceinfo-sample:\n
+    \           _class: serviceinfo\n        log:\n          filters:\n            level:
+    '0,1,2,3,4'\n            type: debug,info,error,warn\n        server:\n          port:
+    '8077'\n          endpoints:\n          - path: \\\"/\\\"\n            body: |-\n
+    \               <html>\n                <head><title>Example application (operator
+    default values)</title></head>\n                <body>\n                  <h1>SXAPI
+    is live ! (operator's managed)</h1>\n                  <p>\n                    This
+    example is deployed using the sxapi operator example\n                    based
+    on the <a href=\\\"https://helm-repository.readthedocs.io/en/latest/charts/sxapi.html\\\"
     target=\\\"_blank\\\">sxapi chart</a>\n                    available in the <a
     href=\\\"https://helm-repository.readthedocs.io\\\" target=\\\"_blank\\\">startx
     helm repository</a>. \n                  </p>\n                  <p>\n                    You

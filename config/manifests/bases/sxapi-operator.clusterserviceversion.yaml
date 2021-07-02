@@ -32,13 +32,17 @@ metadata:
         }
       ]
     capabilities: Seamless Upgrades
-    categories: Application Runtime
+    categories: Application Runtime, Developer Tools, Integration & Delivery
     certified: "false"
     containerImage: quay.io/startx/sxapi-operator:v0.0.8
-    createdAt: "2021-06-28T15:23:00Z"
     description: Run SXApi-based applications on Kubernetes / Openshift clusters.
+    olm.operatorGroup: global-operators
+    olm.operatorNamespace: openshift-operators
+    olm.targetNamespaces: startx-operators
     operatorframework.io/suggested-namespace: startx-operators
     operators.openshift.io/valid-subscription: '["OpenShift Container Platform"]'
+    operators.operatorframework.io/builder: operator-sdk-v1.8.0+git
+    operators.operatorframework.io/project_layout: helm.sdk.operatorframework.io/v1
     repository: https://github.com/startx/sxapi-operator
     support: STARTX
   name: sxapi-operator.v0.0.8
@@ -50,7 +54,7 @@ spec:
     - description: SXApi instance
       displayName: SXApi
       kind: SXApi
-      name: sxapi.startx.fr
+      name: sxapis.sxapi.startx.fr
       resources:
       - kind: ConfigMap
         name: ""
@@ -162,28 +166,29 @@ spec:
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
       version: v1alpha1
-  description: "## Overview\n\nThe SXApi Operator manages the full lifecycle of [sxapi](https://sxapi-core.readthedocs.io)\napplications.
-    \ The operator's goal is to automate the tasks required when deploying\nan sxapi
-    application.\n\nBeyond installation, the operator helps to automate the\nprocess
-    of upgrading, backing up and restoring as needed and remove the human\nas much
-    as possible. \n\nThe operator aims to provide the following, and is a work in
-    progress.\n\n* Easy configuration and installation of the SXApi resources with
-    sane defaults to get up and running quickly. \n* Autoscale the SXApi computes
-    resources as necessary to handle workload (tech preview).\n\n## Usage\n\nDeploy
-    a basic SXApi application by creating a new SXApi resource in your current namespace.\n\n```yaml\napiVersion:
-    sxapi.startx.fr/v1alpha1\nkind: SXApi\nmetadata:\n  name: example-sxapi\nspec:
-    \n  context:\n    app: example-sxapi\n    component: sxapi\n    environment: demo\n
-    \   scope: example\n    version: 0.0.8\n  sxapi:\n    data: |\n      sxapi.yml:
-    |-\n        name: example\n        description: Description of the example sxapi
-    instance (defined in sxapi operator)\n        version: \\\"0.3.57\\\"\n        debug:
-    false\n        resources: \n          serviceinfo-sample:\n            _class:
-    serviceinfo\n        log:\n          filters:\n            level: '0,1,2,3,4'\n
-    \           type: debug,info,error,warn\n        server:\n          port: '8077'\n
-    \         endpoints:\n          - path: \\\"/\\\"\n            body: |-\n                <html>\n
-    \               <head><title>Example application (operator default values)</title></head>\n
-    \               <body>\n                  <h1>SXAPI is live ! (operator's managed)</h1>\n
-    \                 <p>\n                    This example is deployed using the
-    sxapi operator example\n                    based on the <a href=\\\"https://helm-repository.readthedocs.io/en/latest/charts/sxapi.html\\\"
+  description: "## sssOverview\n\nThe SXApi Operator manages the full lifecycle of
+    [sxapi](https://sxapi-core.readthedocs.io)\napplications.  The operator's goal
+    is to automate the tasks required when deploying\nan sxapi application.\n\nBeyond
+    installation, the operator helps to automate the\nprocess of upgrading, backing
+    up and restoring as needed and remove the human\nas much as possible. \n\nThe
+    operator aims to provide the following, and is a work in progress.\n\n* Easy configuration
+    and installation of the SXApi resources with sane defaults to get up and running
+    quickly. \n* Autoscale the SXApi computes resources as necessary to handle workload
+    (tech preview).\n\n## Usage\n\nDeploy a basic SXApi application by creating a
+    new SXApi resource in your current namespace.\n\n```yaml\napiVersion: sxapi.startx.fr/v1alpha1\nkind:
+    SXApi\nmetadata:\n  name: example-sxapi\nspec: \n  context:\n    app: example-sxapi\n
+    \   component: sxapi\n    environment: demo\n    scope: example\n    version:
+    0.0.8\n  sxapi:\n    data: |\n      sxapi.yml: |-\n        name: example\n        description:
+    Description of the example sxapi instance (defined in sxapi operator)\n        version:
+    \\\"0.3.57\\\"\n        debug: false\n        resources: \n          serviceinfo-sample:\n
+    \           _class: serviceinfo\n        log:\n          filters:\n            level:
+    '0,1,2,3,4'\n            type: debug,info,error,warn\n        server:\n          port:
+    '8077'\n          endpoints:\n          - path: \\\"/\\\"\n            body: |-\n
+    \               <html>\n                <head><title>Example application (operator
+    default values)</title></head>\n                <body>\n                  <h1>SXAPI
+    is live ! (operator's managed)</h1>\n                  <p>\n                    This
+    example is deployed using the sxapi operator example\n                    based
+    on the <a href=\\\"https://helm-repository.readthedocs.io/en/latest/charts/sxapi.html\\\"
     target=\\\"_blank\\\">sxapi chart</a>\n                    available in the <a
     href=\\\"https://helm-repository.readthedocs.io\\\" target=\\\"_blank\\\">startx
     helm repository</a>. \n                  </p>\n                  <p>\n                    You
@@ -201,8 +206,191 @@ spec:
     mediatype: image/svg+xml
   install:
     spec:
-      deployments: null
-    strategy: ""
+      clusterPermissions:
+      - rules:
+        - apiGroups:
+          - authentication.k8s.io
+          resources:
+          - tokenreviews
+          verbs:
+          - create
+        - apiGroups:
+          - authorization.k8s.io
+          resources:
+          - subjectaccessreviews
+          verbs:
+          - create
+        - apiGroups:
+          - ""
+          resources:
+          - namespaces
+          verbs:
+          - get
+        - apiGroups:
+          - ""
+          resources:
+          - secrets
+          verbs:
+          - '*'
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - create
+        - apiGroups:
+          - sxapi.startx.fr
+          resources:
+          - sxapis
+          - sxapis/status
+          - sxapis/finalizers
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - services
+          - services/finalizers
+          - endpoints
+          - persistentvolumeclaims
+          - events
+          - configmaps
+          - secrets
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - route.openshift.io
+          resources:
+          - route
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - apps
+          resources:
+          - deployments
+          - daemonsets
+          - replicasets
+          - statefulsets
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        serviceAccountName: sxapi-operator-controller-manager
+      deployments:
+      - name: sxapi-operator-controller-manager
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              control-plane: controller-manager
+          strategy: {}
+          template:
+            metadata:
+              labels:
+                control-plane: controller-manager
+            spec:
+              containers:
+              - args:
+                - --health-probe-bind-address=:8081
+                - --metrics-bind-address=127.0.0.1:8080
+                - --leader-elect
+                - --leader-election-id=sxapi-operator
+                image: quay.io/startx/sxapi-operator:0.0.8
+                livenessProbe:
+                  httpGet:
+                    path: /healthz
+                    port: 8081
+                  initialDelaySeconds: 15
+                  periodSeconds: 20
+                name: manager
+                readinessProbe:
+                  httpGet:
+                    path: /readyz
+                    port: 8081
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                resources:
+                  limits:
+                    cpu: 150m
+                    memory: 256Mi
+                  requests:
+                    cpu: 100m
+                    memory: 64Mi
+                securityContext:
+                  allowPrivilegeEscalation: false
+              - args:
+                - --secure-listen-address=0.0.0.0:8443
+                - --upstream=http://127.0.0.1:8080/
+                - --logtostderr=true
+                - --v=10
+                image: gcr.io/kubebuilder/kube-rbac-proxy:v0.8.0
+                name: kube-rbac-proxy
+                ports:
+                - containerPort: 8443
+                  name: https
+                resources: {}
+              securityContext:
+                runAsNonRoot: true
+              serviceAccountName: sxapi-operator-controller-manager
+              terminationGracePeriodSeconds: 10
+      permissions:
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
+        - apiGroups:
+          - coordination.k8s.io
+          resources:
+          - leases
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - create
+          - patch
+        serviceAccountName: sxapi-operator-controller-manager
+    strategy: deployment
   installModes:
   - supported: false
     type: OwnNamespace

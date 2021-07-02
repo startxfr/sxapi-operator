@@ -14,8 +14,11 @@ Usage:
   - commit                   commit a change to the current branch
   - build operator           Build the sxapi operator
   - build bundle             Build the sxapi operator bundle
-  - build catalog            Build the sxapi operator catalog
   - build all                Build all the sxapi operator components (operator, bundle and OLM catalog)
+  - test scorecard           Build the sxapi operator and scorecard it
+  - test bundle              Build the sxapi operator bundle and deploy it
+  - test bundle-upgrade      Build the sxapi operator bundle and upgrade the deployed one
+  - test all                 Build all the sxapi operator components (operator, bundle and OLM catalog)
   - publish operator         Build and publish the sxapi operator
   - publish bundle           Build and publish the sxapi operator bundle
   - publish catalog          Build and publish the sxapi operator catalog
@@ -59,10 +62,36 @@ if [[ "$1" != "" ]]; then
                     git add $PROJECT_PATH
                     git commit $PROJECT_PATH
                 ;;
-                *)
+                all)
                     make docker-build bundle bundle-build catalog-build
                     git add $PROJECT_PATH
                     git commit $PROJECT_PATH
+                ;;
+                *)
+                    menuUsage
+                ;;
+            esac
+        ;;
+        test)
+            case $2 in
+                scorecard)
+                    make docker-build docker-push bundle bundle-build
+                    operator-sdk scorecard ./bundle
+                ;;
+                bundle)
+                    make docker-build docker-push bundle bundle-build bundle-push
+                    operator-sdk run bundle ./bundle
+                ;;
+                bundle-upgrade)
+                    make docker-build docker-push bundle bundle-build bundle-push
+                    operator-sdk run bundle-upgrade ./bundle
+                ;;
+                all)
+                    make docker-build docker-push bundle bundle-build bundle-push
+                    operator-sdk run bundle ./bundle
+                ;;
+                *)
+                    menuUsage
                 ;;
             esac
         ;;
@@ -83,10 +112,13 @@ if [[ "$1" != "" ]]; then
                     git add $PROJECT_PATH
                     git commit $PROJECT_PATH
                 ;;
-                *)
+                all)
                     make docker-build docker-push bundle bundle-build bundle-push catalog-build catalog-push
                     git add $PROJECT_PATH
                     git commit $PROJECT_PATH
+                ;;
+                *)
+                    menuUsage
                 ;;
             esac
         ;;
