@@ -92,7 +92,7 @@ spec:
         path: context
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:fieldGroup:Context
-        - urn:alm:descriptor:com.tectonic.ui:hidden
+        # - urn:alm:descriptor:com.tectonic.ui:hidden
       - description: The name of the cluster
         displayName: Cluster name
         path: context.cluster
@@ -134,7 +134,7 @@ spec:
         path: sxapi
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:fieldGroup:SXApi
-        - urn:alm:descriptor:com.tectonic.ui:hidden
+        # - urn:alm:descriptor:com.tectonic.ui:hidden
       - description: Replicas number for this deployment
         displayName: Replicas
         path: sxapi.replicas
@@ -154,15 +154,14 @@ spec:
         - urn:alm:descriptor:com.tectonic.ui:advanced
         - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
       statusDescriptors:
-      - description: The status of each of the member Pods for the etcd cluster.
-        displayName: Member Status
-        path: members
+      - description: The status of the sxapi application.
+        displayName: State
+        path: conditions.0.status
         x-descriptors:
-        - urn:alm:descriptor:com.tectonic.ui:podStatuses
-      - description: Phase is a simple, high-level summary of where the ArgoCDExport
-          is in its lifecycle.
-        displayName: Phase
-        path: phase
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - description: The name of the sxapi application.
+        displayName: Name
+        path: deployedRelease.name
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
       version: v1alpha1
@@ -221,11 +220,18 @@ spec:
   - sxapi
   - micro-service
   - faas
+  - codeless
   - nodejs
   - api
   - kubernetes
+  - open source
   labels:
-    Name: sxapi-operator
+    alm-owner-sxpi: sxapi-operator
+    operated-by: sxapi-operator
+  selector:
+    matchLabels:
+      alm-owner-sxpi: sxapi-operator
+      operated-by: sxapi-operator
   links:
   - name: SXApi Documentation
     url: https://sxapi-core.readthedocs.io
