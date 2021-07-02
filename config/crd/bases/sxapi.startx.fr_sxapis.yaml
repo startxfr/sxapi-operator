@@ -17,7 +17,10 @@ spec:
     storage: true
     schema:
       openAPIV3Schema:
-        description: SXApi is the Schema for the sxapis API
+        description: SXApi is a definition of application resources.
+        required:
+          - metadata
+          - spec
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation

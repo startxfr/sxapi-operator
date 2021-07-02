@@ -52,7 +52,7 @@ spec:
   apiservicedefinitions: {}
   customresourcedefinitions:
     owned:
-    - description: SXApi instance
+    - description: Deployement of an SXApi application
       displayName: SXApi
       kind: SXApi
       name: sxapis.sxapi.startx.fr
