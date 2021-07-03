@@ -14,7 +14,7 @@ spec:
     expose:
       enabled: false
     version: "latest"
-    profile: dev:start
+    profile: prod:start
     replicas: 1
     debug: true
     data: |
