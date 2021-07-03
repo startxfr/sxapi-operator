@@ -41,11 +41,13 @@ metadata:
       and examples
     olm.operatorGroup: global-operators
     olm.operatorNamespace: openshift-operators
+    olm.properties: '[{"type": "olm.maxOpenShiftVersion", "value": "4.7"}]'
     olm.targetNamespaces: openshift-operators
     operatorframework.io/suggested-namespace: openshift-operators
     operators.openshift.io/valid-subscription: '["OpenShift Container Platform"]'
     operators.operatorframework.io/builder: operator-sdk-v1.8.0+git
     operators.operatorframework.io/project_layout: helm.sdk.operatorframework.io/v1
+    com.redhat.openshift.versions: "v4.6-v4.7"
     repository: https://github.com/startx/sxapi-operator
     support: STARTX
   name: sxapi-operator.v0.1.2
