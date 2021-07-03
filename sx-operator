@@ -78,6 +78,7 @@ if [[ "$1" != "" ]]; then
                 scorecard)
                     make docker-build docker-push bundle bundle-build
                     operator-sdk scorecard ./bundle
+                    operator-sdk bundle validate ./bundle --select-optional name=community
                 ;;
                 bundle)
                     make docker-build docker-push bundle bundle-build bundle-push
