@@ -78,6 +78,7 @@ if [[ "$1" != "" ]]; then
                 scorecard)
                     make docker-build docker-push bundle bundle-build
                     operator-sdk scorecard ./bundle
+                    operator-sdk bundle validate ./bundle --select-optional name=community
                 ;;
                 bundle)
                     make docker-build docker-push bundle bundle-build bundle-push
@@ -93,7 +94,7 @@ if [[ "$1" != "" ]]; then
                 all)
                     make docker-build docker-push bundle bundle-build bundle-push
                     oc apply -f ./load-catalog.yaml
-                    operator-sdk run bundle quay.io/startx/sxapi-operator-bundle:v0.1.2
+                    operator-sdk run bundle quay.io/startx/sxapi-operator-bundle:v0.1.3
                 ;;
                 *)
                     menuUsage
