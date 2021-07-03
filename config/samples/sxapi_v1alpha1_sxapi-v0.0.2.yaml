@@ -1,0 +1,61 @@
+apiVersion: sxapi.startx.fr/v1alpha1
+kind: SXApi
+metadata:
+  name: sxapi-example-v0-0-2
+spec:
+  context:
+    cluster: localhost
+    scope: bu-marketing
+    environment: dev
+    app: example
+    component: sxapi
+    version: "0.0.2"
+  sxapi:
+    data: |
+      sxapi.yml: |-
+        name: default
+        description: Description of the example sxapi instance version 2 (managed with the sxapi operator)
+        version: "0.3.57"
+        debug: false
+        resources:
+          serviceinfo-sample:
+            _class: serviceinfo
+        log:
+          filters:
+            level: '0,1,2,3,4'
+            type: debug,info,error,warn
+        server:
+          port: '8077'
+          endpoints:
+          - path: "/"
+            body: |-
+                <html>
+                <head><title>Example application v0.0.2</title></head>
+                <body>
+                  <h1>Welcome to the marketing example version 0.0.2</h1>
+                  <p>
+                    This example is deployed using the sxapi operator based on the 
+                    <a href="https://helm-repository.readthedocs.io/en/latest/charts/sxapi.html" target="_blank">sxapi chart</a>
+                    available in the <a href="https://helm-repository.readthedocs.io" target="_blank">startx helm repository</a>. 
+                  </p>
+                  <p>
+                    You could check the following endpoints :</p>
+                  <ul>
+                    <li><a href="./health">Health status (used by readiness probe)</a></li>
+                    <li><a href="./info">Information about the application</a></li>
+                  </ul>
+                </body>
+                </html>
+          - path: "/health"
+            resource: serviceinfo-sample
+            endpoint: health
+          - path: "/info"
+            resource: serviceinfo-sample
+            endpoint: info
+    debug: false
+    expose:
+      enabled: false
+    profile: prod:start
+    replicas: 1
+  
+  

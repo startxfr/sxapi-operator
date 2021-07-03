@@ -54,7 +54,7 @@ helm install startx/sxapi
 | sxapi.service.enabled | false      | Enable service for this application                   |
 | sxapi.version         | 0.3.57     | Sxapi image version to run                            |
 | sxapi.profile         | prod:start | Profile to run inside the container                   |
-| sxapi.debug           | false      | Enable debuging of the container                      |
+| sxapi.debug           | true       | Enable debuging of the container                      |
 | sxapi.replicas        | 1          | Define the number of replicas for this sxapi instance |
 | sxapi.data            | string     | Files to load into the application                    |
 
@@ -130,3 +130,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 0.3.381 | 2021-06-10 | Align example and cluster charts dependencies to basic chart version 0.3.377                           |
 | 0.3.390 | 2021-06-12 | Prepare 0.4.0 release
 | 0.3.423 | 2021-06-17 | Prepare the v0.4 release. Stable aligned version of all charts
+| 0.3.425 | 2021-07-03 | Debug route and service definitions

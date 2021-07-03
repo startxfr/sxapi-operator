@@ -1,20 +1,20 @@
 apiVersion: sxapi.startx.fr/v1alpha1
 kind: SXApi
 metadata:
-  name: sxapi-sample
+  name: sxapi-example-v0-0-1
 spec:
   context:
-    app: default-sxapi
     cluster: localhost
+    scope: bu-marketing
+    environment: recette
+    app: example
     component: sxapi
-    environment: myenv
-    scope: myscope
     version: "0.0.1"
   sxapi:
     data: |
       sxapi.yml: |-
         name: default
-        description: Description of the default sxapi instance (defined in sxapi operator)
+        description: Description of the example sxapi instance version 1 (managed with the sxapi operator)
         version: "0.3.57"
         debug: false
         resources:
@@ -22,19 +22,19 @@ spec:
             _class: serviceinfo
         log:
           filters:
-            level: '0,1,2,3,4'
-            type: debug,info,error,warn
+            level: '0,1,2'
+            type: info,error,warn
         server:
           port: '8077'
           endpoints:
           - path: "/"
             body: |-
                 <html>
-                <head><title>Example application (operator default values)</title></head>
+                <head><title>Example application v0.0.1</title></head>
                 <body>
-                  <h1>SXAPI is live ! (operator's managed)</h1>
+                  <h1>Welcome to the marketing example version 0.0.1</h1>
                   <p>
-                    This example is deployed using the sxapi operator example based on the 
+                    This example is deployed using the sxapi operator based on the 
                     <a href="https://helm-repository.readthedocs.io/en/latest/charts/sxapi.html" target="_blank">sxapi chart</a>
                     available in the <a href="https://helm-repository.readthedocs.io" target="_blank">startx helm repository</a>. 
                   </p>

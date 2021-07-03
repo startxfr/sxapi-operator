@@ -1,6 +1,6 @@
 <img align="right" height="50" src="https://raw.githubusercontent.com/startxfr/sxapi-core/master/docs/assets/logo.svg?sanitize=true">
 
-# sxapi operator ![sxapi](https://img.shields.io/badge/latest-v0.0.11-blue.svg)
+# sxapi operator ![sxapi](https://img.shields.io/badge/latest-v0.1.0-blue.svg)
 
 [![last commit](https://img.shields.io/github/last-commit/startxfr/sxapi-operator.svg)](https://github.com/startxfr/sxapi-operator)
 [![Doc](https://readthedocs.org/projects/sxapi-core/badge)](https://sxapi-core.readthedocs.io)
@@ -16,7 +16,7 @@ You can get some sample code and components usage by [reading the sxapi document
 
 Install the SXApi operator into an openshift cluster using the following command. This command will install :
 
-- The `sxapi-catalog` **CatalogSource**, into the `openshift-marketplace` namespace, running the `quay.io/startx/sxapi-operator-catalog:v0.0.11` catalog image
+- The `sxapi-catalog` **CatalogSource**, into the `openshift-marketplace` namespace, running the `quay.io/startx/sxapi-operator-catalog:v0.1.0` catalog image
 - The `sxapi-group` **OperatorGroup**, into the `openshift-marketplace` namespace, targeting the `default`, `demo-sxapi` and `sxapi` namespace
 - The `sxapi-operator` **Subscription**, into the `default` namespace, using the `sxapi-catalog` catalog
 

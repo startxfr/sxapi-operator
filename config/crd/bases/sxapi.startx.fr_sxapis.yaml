@@ -17,7 +17,14 @@ spec:
     storage: true
     schema:
       openAPIV3Schema:
-        description: SXApi is the Schema for the sxapis API
+        description: |
+          SXApi is a definition of the content of the application and how to deploy it under a kubernetes cluster.
+
+          This custom resource allow you to deploy and update with a single resource the content of your application 
+          as well as the way you deploy and scale it.
+        required:
+          - metadata
+          - spec
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -40,22 +47,53 @@ spec:
                 description: The context of this application (used for labeling)
                 type: object
                 properties:
-                  app:
-                    type: string
                   cluster:
-                    type: string
-                  component:
-                    type: string
-                  environment:
+                    description: The name of the cluster.
                     type: string
                   scope:
+                    description: The name of the scope.
+                    type: string
+                  environment:
+                    description: The name of the environment.
+                    type: string
+                  component:
+                    description: The name of the compoment.
+                    type: string
+                  app:
+                    description: The name of the application.
                     type: string
                   version:
+                    description: The version of the application.
                     type: string
               sxapi:
                 description: The content of this application (used for service configuration)
                 type: object
-                x-kubernetes-preserve-unknown-fields: true
+                properties:
+                  data:
+                    description: >- 
+                      Should contain an sxapi.yml entry structured as a yaml document into a string field.
+                      You must read the https://sxapi-core.readthedocs.io documentation for more informations.
+                    type: string
+                  debug:
+                    description: Enable the debuging mode with more tools and log informations
+                    type: boolean
+                  expose:
+                    description: Define if we expose the application trough the application router
+                    type: object
+                    properties:
+                      enabled:
+                        description: Enable the creation of a route
+                        type: boolean
+                  profile:
+                    description: >- 
+                      The name of the NPM profile used to start the application
+                      You must read the https://sxapi-core.readthedocs.io documentation for full list of profiles
+                      availables and their uses-cases.
+                    type: string
+                  replicas:
+                    description: the number of pod replicas to which the deployment must scale application
+                    type: integer
+                    format: int32
           status:
             description: Status defines the observed state of SXApi
             type: object

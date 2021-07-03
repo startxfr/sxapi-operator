@@ -26,9 +26,10 @@ spec:
         runAsNonRoot: true
       containers:
       - args:
-        - --leader-elect
-        - --leader-election-id=sxapi-operator
-        image: controller:latest
+        - "--leader-elect"
+        - "--leader-election-id=sxapi-operator"
+        - "--max-concurrent-reconciles=4"
+        image: "controller:latest"
         name: manager
         securityContext:
           allowPrivilegeEscalation: false
@@ -46,10 +47,10 @@ spec:
           periodSeconds: 10
         resources:
           limits:
-            cpu: 150m
-            memory: 256Mi
+            cpu: 180m
+            memory: 420Mi
           requests:
-            cpu: 100m
+            cpu: 90m
             memory: 64Mi
       serviceAccountName: controller-manager
-      terminationGracePeriodSeconds: 10
+      terminationGracePeriodSeconds: 20

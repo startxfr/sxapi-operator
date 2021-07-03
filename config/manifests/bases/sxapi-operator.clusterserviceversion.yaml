@@ -8,19 +8,19 @@ metadata:
           "apiVersion": "sxapi.startx.fr/v1alpha1",
           "kind": "SXApi",
           "metadata": {
-            "name": "sxapi-sample"
+            "name": "sxapi-example-prod"
           },
           "spec": {
             "context": {
-              "app": "default-sxapi",
               "cluster": "localhost",
+              "scope": "bu-marketing",
+              "environment": "prod",
+              "app": "example",
               "component": "sxapi",
-              "environment": "myenv",
-              "scope": "myscope",
               "version": "0.0.1"
             },
             "sxapi": {
-              "data": "sxapi.yml: |-\n  name: default\n  description: Description of the default sxapi instance (defined in sxapi operator)\n  version: \"0.3.57\"\n  debug: false\n  resources:\n    serviceinfo-sample:\n      _class: serviceinfo\n  log:\n    filters:\n      level: '0,1,2,3,4'\n      type: debug,info,error,warn\n  server:\n    port: '8077'\n    endpoints:\n    - path: \"/\"\n      body: |-\n          <html>\n          <head><title>Example application (operator default values)</title></head>\n          <body>\n            <h1>SXAPI is live ! (operator's managed)</h1>\n            <p>\n              This example is deployed using the sxapi operator example based on the \n              <a href=\"https://helm-repository.readthedocs.io/en/latest/charts/sxapi.html\" target=\"_blank\">sxapi chart</a>\n              available in the <a href=\"https://helm-repository.readthedocs.io\" target=\"_blank\">startx helm repository</a>. \n            </p>\n            <p>\n              You could check the following endpoints :</p>\n            <ul>\n              <li><a href=\"./health\">Health status (used by readiness probe)</a></li>\n              <li><a href=\"./info\">Information about the application</a></li>\n            </ul>\n          </body>\n          </html>\n    - path: \"/health\"\n      resource: serviceinfo-sample\n      endpoint: health\n    - path: \"/info\"\n      resource: serviceinfo-sample\n      endpoint: info\n",
+              "data": "sxapi.yml: |-\n  name: default\n  description: Description of the default sxapi instance (defined in sxapi operator)\n  version: \"0.3.57\"\n  debug: false\n  resources:\n    serviceinfo-sample:\n      _class: serviceinfo\n  log:\n    filters:\n      level: '0,1,2'\n      type: info,error,warn\n  server:\n    port: '8077'\n    endpoints:\n    - path: \"/\"\n      body: |-\n          <html>\n          <head><title>Example application production</title></head>\n          <body>\n            <h1>SXAPI is live in production (operator's managed)</h1>\n            <p>\n              This example is deployed using the sxapi operator example based on the \n              <a href=\"https://helm-repository.readthedocs.io/en/latest/charts/sxapi.html\" target=\"_blank\">sxapi chart</a>\n              available in the <a href=\"https://helm-repository.readthedocs.io\" target=\"_blank\">startx helm repository</a>. \n            </p>\n            <p>\n              You could check the following endpoints :</p>\n            <ul>\n              <li><a href=\"./health\">Health status (used by readiness probe)</a></li>\n              <li><a href=\"./info\">Information about the application</a></li>\n            </ul>\n          </body>\n          </html>\n    - path: \"/health\"\n      resource: serviceinfo-sample\n      endpoint: health\n    - path: \"/info\"\n      resource: serviceinfo-sample\n      endpoint: info\n",
               "debug": false,
               "expose": {
                 "enabled": true
@@ -29,12 +29,38 @@ metadata:
               "replicas": 2
             }
           }
+        },
+        {
+          "apiVersion": "sxapi.startx.fr/v1alpha1",
+          "kind": "SXApi",
+          "metadata": {
+            "name": "sxapi-example-dev"
+          },
+          "spec": {
+            "context": {
+              "cluster": "localhost",
+              "scope": "bu-marketing",
+              "environment": "dev",
+              "app": "example",
+              "component": "sxapi",
+              "version": "0.0.2"
+            },
+            "sxapi": {
+              "data": "sxapi.yml: |-\n  name: default\n  description: Description of the default sxapi instance (defined in sxapi operator)\n  version: \"0.3.57\"\n  debug: true\n  resources:\n    serviceinfo-sample:\n      _class: serviceinfo\n  log:\n    filters:\n      level: '0,1,2,3,4'\n      type: debug,info,error,warn\n  server:\n    port: '8077'\n    endpoints:\n    - path: \"/\"\n      body: |-\n          <html>\n          <head><title>Example application developement</title></head>\n          <body>\n            <h1>SXAPI is live in developement (operator's managed)</h1>\n            <p>\n              This example is deployed using the sxapi operator example based on the \n              <a href=\"https://helm-repository.readthedocs.io/en/latest/charts/sxapi.html\" target=\"_blank\">sxapi chart</a>\n              available in the <a href=\"https://helm-repository.readthedocs.io\" target=\"_blank\">startx helm repository</a>. \n            </p>\n            <p>\n              You could check the following endpoints :</p>\n            <ul>\n              <li><a href=\"./health\">Health status (used by readiness probe)</a></li>\n              <li><a href=\"./info\">Information about the application</a></li>\n            </ul>\n          </body>\n          </html>\n    - path: \"/health\"\n      resource: serviceinfo-sample\n      endpoint: health\n    - path: \"/info\"\n      resource: serviceinfo-sample\n      endpoint: info\n",
+              "debug": true,
+              "expose": {
+                "enabled": false
+              },
+              "profile": "prod:start",
+              "replicas": 1
+            }
+          }
         }
       ]
     capabilities: Seamless Upgrades
     categories: Application Runtime, Developer Tools, Integration & Delivery
     certified: "false"
-    containerImage: quay.io/startx/sxapi-operator:v0.0.11
+    containerImage: quay.io/startx/sxapi-operator:v0.1.0
     description: Run codeless micro-applications on Kubernetes / Openshift clusters
       using the SXApi engine. For more information see https://sxapi-core.readthedocs.io
     olm.operatorGroup: global-operators
@@ -46,13 +72,13 @@ metadata:
     operators.operatorframework.io/project_layout: helm.sdk.operatorframework.io/v1
     repository: https://github.com/startx/sxapi-operator
     support: STARTX
-  name: sxapi-operator.v0.0.11
+  name: sxapi-operator.v0.1.0
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
   customresourcedefinitions:
     owned:
-    - description: SXApi instance
+    - description: Deployement of an SXApi application
       displayName: SXApi
       kind: SXApi
       name: sxapis.sxapi.startx.fr
@@ -244,9 +270,9 @@ spec:
   provider:
     name: STARTX
     url: https://sxapi-core.readthedocs.io
-  replaces: sxapi-operator.v0.0.10
+  replaces: sxapi-operator.v0.0.12
   selector:
     matchLabels:
       alm-owner-sxpi: sxapi-operator
       operated-by: sxapi-operator
-  version: 0.0.11
+  version: 0.1.0
