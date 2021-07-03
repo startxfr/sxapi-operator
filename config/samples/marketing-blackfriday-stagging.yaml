@@ -1,0 +1,52 @@
+apiVersion: sxapi.startx.fr/v1alpha1
+kind: SXApi
+metadata:
+  name: marketing-blackfriday-stagging
+spec:
+  context:
+    cluster: localhost
+    scope: bu-marketing
+    environment: stagging
+    app: blackfriday-stagging
+    component: frontend
+    version: "0.0.2"
+  sxapi:
+    expose:
+      enabled: false
+    version: "0.3.58"
+    profile: prod:start
+    replicas: 2
+    debug: true
+    data: |
+      sxapi.yml: |-
+        name: blackfriday-frontend
+        description: Marketing blackfriday frontend microservice
+        version: "0.0.2"
+        debug: true
+        log:
+          filters:
+            level: '0,1,2,3,4'
+            type: debug,info,error,warn
+        server:
+          port: '8077'
+          endpoints:
+          - path: "/"
+            body: |-
+                <html>
+                <head><title>Blackfriday website (stagging)</title></head>
+                <body>
+                  <h1>Blackfriday website v0.0.2 (stagging)</h1>
+                  <p>
+                    This example is deployed using the sxapi operator based on the 
+                    <a href="https://helm-repository.readthedocs.io/en/latest/charts/sxapi.html" target="_blank">sxapi chart</a>
+                    available in the <a href="https://helm-repository.readthedocs.io" target="_blank">startx helm repository</a>. 
+                  </p>
+                  <p>
+                    A simple example deploy the version <b>0.0.2</b> of the application <b>blackfriday</b> running for the <b>marketing BU</b>.
+                    Staged to <b>stagging</b>, the application is <b>not exposed</b>, replicated to <b>2</b> and has <b>debug mode</b> enabled.
+                    The application is executed with the <b>0.3.58</b> version of the 
+                    <a href="https://hub.docker.com/r/startx/sxapi" target="_blank">sxapi container image</a>.
+                    and use the <b>prod:start</b> profile.
+                  </p>
+                </body>
+                </html>

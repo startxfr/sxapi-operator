@@ -47,7 +47,7 @@ spec:
       sxapi.yml: |-
         name: default
         description: Description of the example sxapi instance (defined in sxapi operator)
-        version: "0.3.57"
+        version: "0.0.1"
         debug: true
         resources:
           serviceinfo-sample:
