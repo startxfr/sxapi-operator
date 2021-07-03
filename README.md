@@ -12,91 +12,178 @@ Very light (application less than 100Ko, full container stack for less than 30Mo
 
 You can get some sample code and components usage by [reading the sxapi documentation](https://sxapi-core.readthedocs.io).
 
+
 ## Install the SXApi operator
 
-Install the SXApi operator into an openshift cluster using the following command. This command will install :
+### Install into an Openshift cluster
 
-- The `sxapi-catalog` **CatalogSource**, into the `openshift-marketplace` namespace, running the `quay.io/startx/sxapi-operator-catalog:v0.1.0` catalog image
-- The `sxapi-group` **OperatorGroup**, into the `openshift-marketplace` namespace, targeting the `default`, `demo-sxapi` and `sxapi` namespace
-- The `sxapi-operator` **Subscription**, into the `default` namespace, using the `sxapi-catalog` catalog
+The SXApi operator is available via the Operatorhub, available via the community catalog already loaded into an openshift cluster.
+
+#### Using the web console
+
+You can go to the the **`operator > operatorHub`** menu, and search for sxapi into the operator catalog. You can follow
+the installation and wait for your operator to be deployed globally.
+
+#### Using the oc client
+
+You can use the following files to create a subscription for a global installation of you SXApi operator. This configuration
+allow you to deploy applications into all namespaces.
 
 ```bash
-oc apply -f https://raw.githubusercontent.com/startxfr/sxapi-operator/main/load-catalog.yaml
+# for alpha channel (devel)
+oc apply -f https://raw.githubusercontent.com/startxfr/sxapi-operator/devel/load-sub.yaml
+# for fast channel (sandbox, testing)
+oc apply -f https://raw.githubusercontent.com/startxfr/sxapi-operator/main/load-sub.yaml
+# for stable channel (production)
+oc apply -f https://raw.githubusercontent.com/startxfr/sxapi-operator/stable/load-sub.yaml
 ```
 
-## Run a sxapi application
+### Install into a kubernetes cluster
 
-After installing the sxapi operator, you can run an sxapi application with the following application definition
+For other kubernetes distribution, you must install the Operator lifecycle Manager (OLM) into your cluster prior the execute the following commands.
+
+```bash
+# for alpha channel (devel)
+oc apply -f https://raw.githubusercontent.com/startxfr/sxapi-operator/devel/load-catalog.yaml
+# for fast channel (sandbox, testing)
+oc apply -f https://raw.githubusercontent.com/startxfr/sxapi-operator/main/load-catalog.yaml
+# for stable channel (production)
+oc apply -f https://raw.githubusercontent.com/startxfr/sxapi-operator/stable/load-catalog.yaml
+```
+
+For more information on how to use this operator, see [sxapi operator repository](https://github.com/startxfr/sxapi-operator)
+
+## Run your sxapi instance
+
+### Install the default app
+
+After installing the sxapi operator, you can run you first sxapi application with the following example.
+
+Application is deployed in the same namespace as the SXApi custom resource. You should create a project
+to host this example, with ```oc new-project demo-sxapi-default```, prior to creating this resource.
 
 ```yaml
 apiVersion: sxapi.startx.fr/v1alpha1
 kind: SXApi
 metadata:
-  name: sxapi-sample
-  namespace: default
+  name: default-sxapi
 spec:
-  context:
-    app: example-sxapi
-    cluster: localhost
-    component: sxapi
-    environment: myenv
-    scope: myscope
-    version: "0.0.1"
   sxapi:
+    expose:
+      enabled: true
     data: |
       sxapi.yml: |-
-        name: default
-        description: Description of the example sxapi instance (defined in sxapi operator)
+        name: simple-frontend
+        description: simple webpage
         version: "0.0.1"
-        debug: true
-        resources:
-          serviceinfo-sample:
-            _class: serviceinfo
-        log:
-          filters:
-            level: '0,1,2,3,4'
-            type: debug,info,error,warn
         server:
           port: '8077'
           endpoints:
           - path: "/"
             body: |-
                 <html>
-                <head><title>Example application (operator default values)</title></head>
+                <head><title>Simple frontend (demo)</title></head>
                 <body>
-                  <h1>SXAPI is live ! (operator's managed)</h1>
+                  <h1>Simple frontend (demo)</h1>
                   <p>
-                    This example is deployed using the sxapi operator example based on the 
+                    This example is deployed using the sxapi operator based on the 
                     <a href="https://helm-repository.readthedocs.io/en/latest/charts/sxapi.html" target="_blank">sxapi chart</a>
                     available in the <a href="https://helm-repository.readthedocs.io" target="_blank">startx helm repository</a>. 
                   </p>
-                  <p>
-                    You could check the following endpoints :</p>
-                  <ul>
-                    <li><a href="./health">Health status (used by readiness probe)</a></li>
-                    <li><a href="./info">Information about the application</a></li>
-                  </ul>
                 </body>
                 </html>
-          - path: "/health"
-            resource: serviceinfo-sample
-            endpoint: health
-          - path: "/info"
-            resource: serviceinfo-sample
-            endpoint: info
-    debug: true
-    expose:
-      enabled: true
-    profile: prod:start
-    replicas: 1
 ```
 
-You can instanciate this application with the following command
+You can instanciate the default sxapi application with the following command
 
 ```bash
+oc new-project demo-sxapi-default
 vi sxapi-apps.yaml
 # copy and paste the content of the previous yaml content
 oc apply -f sxapi-apps.yaml
+```
+
+### Example marketing prod
+
+Deploying the version **0.0.1** of the application **blackfriday** running for the **marketing BU**.
+Staged to **production**, the application is **exposed**, replicated to **3** and has debug mode disabled.
+The application is executed with the **0.3.57** version of the [sxapi container image](https://hub.docker.com/r/startx/sxapi)
+and use the **prod:start** profile.
+
+For tenancy purpose, this application will be deployed into its **mkg-blackfriday-prod** namespace.
+
+```bash
+# create and goto project
+oc new-project mkg-blackfriday-prod
+# create the sxapi application
+oc apply -f https://raw.githubusercontent.com/startxfr/sxapi-operator/main/config/samples/marketing-blackfriday-prod.yaml
+```
+
+### Example marketing preprod
+
+Deploying the version **0.0.1** of the application **blackfriday** running for the **marketing BU**.
+Staged to **preprod**, the application is **exposed**, replicated to **2** and has debug mode disabled.
+The application is executed with the **0.3.57** version of the [sxapi container image](https://hub.docker.com/r/startx/sxapi)
+and use the **prod:start** profile.
+
+For tenancy purpose, this application will be deployed into its **mkg-blackfriday-preprod** namespace.
+
+```bash
+# create and goto project
+oc new-project mkg-blackfriday-preprod
+# create the sxapi application
+oc apply -f https://raw.githubusercontent.com/startxfr/sxapi-operator/main/config/samples/marketing-blackfriday-prod.yaml
+```
+
+### Example marketing stagging
+
+A simple example deploy the version **0.0.2** of the application **blackfriday** running for the **marketing BU**.
+Staged to **stagging**, the application is **not exposed**, replicated to **2** and has **debug mode** enabled.
+The application is executed with the **0.3.58** version of the [sxapi container image](https://hub.docker.com/r/startx/sxapi)
+and use the **prod:start** profile.
+
+For tenancy purpose, this application will be deployed into its **mkg-blackfriday-sandbox** namespace, collocated with testing and dev
+runtimes.
+
+```bash
+# create and goto project
+oc new-project mkg-blackfriday-sandbox
+# create the sxapi application
+oc apply -f https://raw.githubusercontent.com/startxfr/sxapi-operator/main/config/samples/marketing-blackfriday-stagging.yaml
+```
+
+### Example marketing testing
+
+A simple example deploy the version **0.0.3** of the application **blackfriday** running for the **marketing BU**.
+Staged to **testing**, the application is **not exposed**, replicated to **1** and has **debug mode** enabled.
+The application is executed with the **latest** version of the [sxapi container image](https://hub.docker.com/r/startx/sxapi)
+and use the **prod:start** profile.
+
+For tenancy purpose, this application will be deployed into its **mkg-blackfriday-sandbox** namespace, collocated with stagging and dev
+runtimes.
+
+```bash
+# create and goto project
+oc new-project mkg-blackfriday-sandbox
+# create the sxapi application
+oc apply -f https://raw.githubusercontent.com/startxfr/sxapi-operator/main/config/samples/marketing-blackfriday-testing.yaml
+```
+
+### Example marketing dev
+
+A simple example deploy the version **0.0.4** of the application **blackfriday** running for the **marketing BU**.
+Staged to **dev**, the application is **not exposed**, replicated to **1** and has **debug mode** enabled.
+The application is executed with the **testing** version of the [sxapi container image](https://hub.docker.com/r/startx/sxapi)
+and use the **prod:start** profile.
+
+For tenancy purpose, this application will be deployed into its **mkg-blackfriday-sandbox** namespace, collocated with stagging and testing
+runtimes.
+
+```bash
+# create and goto project
+oc new-project mkg-blackfriday-sandbox
+# create the sxapi application
+oc apply -f https://raw.githubusercontent.com/startxfr/sxapi-operator/main/config/samples/marketing-blackfriday-dev.yaml
 ```
 
 ## Contributing
