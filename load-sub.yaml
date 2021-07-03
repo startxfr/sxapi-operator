@@ -10,4 +10,4 @@ spec:
   name: sxapi-operator
   source: community-operators
   sourceNamespace: openshift-marketplace
-  startingCSV: sxapi-operator.v0.1.0
+  startingCSV: sxapi-operator.v0.1.2
