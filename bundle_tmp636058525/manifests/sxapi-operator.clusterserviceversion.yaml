@@ -443,7 +443,7 @@ spec:
   maintainers:
   - email: dev@startx.fr
     name: startx
-  maturity: fast
+  maturity: alpha
   minKubeVersion: 1.20.0
   provider:
     name: STARTX

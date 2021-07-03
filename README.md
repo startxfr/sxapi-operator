@@ -1,6 +1,6 @@
 <img align="right" height="50" src="https://raw.githubusercontent.com/startxfr/sxapi-core/master/docs/assets/logo.svg?sanitize=true">
 
-# sxapi operator ![sxapi](https://img.shields.io/badge/latest-v0.1.0-blue.svg)
+# sxapi operator ![sxapi](https://img.shields.io/badge/latest-v0.1.2-blue.svg)
 
 [![last commit](https://img.shields.io/github/last-commit/startxfr/sxapi-operator.svg)](https://github.com/startxfr/sxapi-operator)
 [![Doc](https://readthedocs.org/projects/sxapi-core/badge)](https://sxapi-core.readthedocs.io)
